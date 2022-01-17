@@ -1,15 +1,15 @@
-import React from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Loginpage from "./components/Loginpage";
-import Choice from "./components/Choice";
-import Feedback from "./components/Feedback";
-import Complaint from "./components/Complaint";
-import Allotment from "./components/Allotment";
-import NewAllotment from "./components/NewAllotment";
-import Vacant from "./components/Vacant";
-import ComplaintStatus from "./components/CompaintStatus";
+import React from 'react';
+import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Loginpage from './components/Loginpage';
+import Choice from './components/Choice';
+import Feedback from './components/Feedback';
+import Complaint from './components/Complaint';
+import Allotment from './components/Allotment';
+import NewAllotment from './components/NewAllotment';
+import Vacant from './components/Vacant';
+import ComplaintStatus from './components/CompaintStatus';
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -21,10 +21,10 @@ const App = () => {
           component={Loginpage}
           options={{
             headerStyle: {
-              backgroundColor: "#56CDD3",
+              backgroundColor: '#56CDD3',
             },
-            title: "",
-            headerTintColor: "white",
+            title: '',
+            headerTintColor: 'white',
           }}
         />
         <Stack.Screen
@@ -32,10 +32,10 @@ const App = () => {
           component={Choice}
           options={{
             headerStyle: {
-              backgroundColor: "#56CDD3",
+              backgroundColor: '#56CDD3',
             },
-            title: "",
-            headerTintColor: "white",
+            title: '',
+            headerTintColor: 'white',
           }}
         />
         <Stack.Screen
@@ -43,10 +43,10 @@ const App = () => {
           component={Feedback}
           options={{
             headerStyle: {
-              backgroundColor: "#56CDD3",
+              backgroundColor: '#56CDD3',
             },
-            title: "",
-            headerTintColor: "white",
+            title: '',
+            headerTintColor: 'white',
           }}
         />
         <Stack.Screen
@@ -54,10 +54,10 @@ const App = () => {
           component={Complaint}
           options={{
             headerStyle: {
-              backgroundColor: "#56CDD3",
+              backgroundColor: '#56CDD3',
             },
-            title: "",
-            headerTintColor: "white",
+            title: '',
+            headerTintColor: 'white',
           }}
         />
         <Stack.Screen
@@ -65,10 +65,10 @@ const App = () => {
           component={Allotment}
           options={{
             headerStyle: {
-              backgroundColor: "#56CDD3",
+              backgroundColor: '#56CDD3',
             },
-            title: "",
-            headerTintColor: "white",
+            title: '',
+            headerTintColor: 'white',
           }}
         />
         <Stack.Screen
@@ -76,10 +76,10 @@ const App = () => {
           component={NewAllotment}
           options={{
             headerStyle: {
-              backgroundColor: "#56CDD3",
+              backgroundColor: '#56CDD3',
             },
-            title: "",
-            headerTintColor: "white",
+            title: '',
+            headerTintColor: 'white',
           }}
         />
         <Stack.Screen
@@ -87,10 +87,10 @@ const App = () => {
           component={Vacant}
           options={{
             headerStyle: {
-              backgroundColor: "#56CDD3",
+              backgroundColor: '#56CDD3',
             },
-            title: "",
-            headerTintColor: "white",
+            title: '',
+            headerTintColor: 'white',
           }}
         />
         <Stack.Screen
@@ -98,10 +98,10 @@ const App = () => {
           component={ComplaintStatus}
           options={{
             headerStyle: {
-              backgroundColor: "#56CDD3",
+              backgroundColor: '#56CDD3',
             },
-            title: "",
-            headerTintColor: "white",
+            title: '',
+            headerTintColor: 'white',
           }}
         />
       </Stack.Navigator>
