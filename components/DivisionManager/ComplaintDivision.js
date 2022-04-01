@@ -11,7 +11,13 @@ import {
 } from "react-native";
 import Redbox from "../PoolHolder/Redbox";
 import DatePicker from "react-native-datepicker";
-const ComplaintDivision = ({ navigation }) => {
+import axios from "axios";
+import Baseurl from "../Baseurl";
+
+const ComplaintDivision = ({ navigation, route }) => {
+  const datas = route.params.data;
+  const token = route.params.token;
+
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, "0");
   var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -26,18 +32,49 @@ const ComplaintDivision = ({ navigation }) => {
   past30 = yyyy1 + "-" + mm1 + "-" + dd1;
   const [startdate, setStartDate] = useState(past30);
   const [enddate, setEndDate] = useState(today);
+  const [data, setData] = useState();
+  const division = datas.division_id;
+  const authAxios = axios.create({
+    baseURL: Baseurl,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const fetchdata = async () => {
+    const res = await authAxios.get(
+      Baseurl +
+        "api/section-vise-complaint-data/" +
+        division +
+        "/" +
+        startdate +
+        "/" +
+        enddate
+    );
+    setData(res.data);
+  };
+  useEffect(() => {
+    fetchdata();
+  }, []);
+  console.log(data);
+
   const Colonybox = (props) => {
     const name = props.colony;
     return (
       <View>
         <TouchableOpacity
           onPress={() => {
-            props.navigation.navigate("ComplaintEachPool", { name: name });
+            props.navigation.navigate("ComplaintEachPool", {
+              name: name,
+              id: props.id,
+              data: datas,
+              token: token,
+            });
           }}
         >
           <View
             style={{
-              maxHeight: 100,
+              maxHeight: 200,
               backgroundColor: "#369398",
               alignItems: "center",
               justifyContent: "center",
@@ -52,7 +89,8 @@ const ComplaintDivision = ({ navigation }) => {
                 alignItems: "center",
                 justifyContent: "center",
                 position: "absolute",
-                left: 25,
+                left: 10,
+                width: 180,
               }}
             >
               <Text style={{ fontSize: 18, color: "white" }}>
@@ -161,7 +199,12 @@ const ComplaintDivision = ({ navigation }) => {
               left: 15,
             }}
           >
-            <TouchableOpacity style={styles.roundbutton}>
+            <TouchableOpacity
+              onPress={() => {
+                fetchdata();
+              }}
+              style={styles.roundbutton}
+            >
               <View
                 style={{
                   alignItems: "center",
@@ -225,18 +268,19 @@ const ComplaintDivision = ({ navigation }) => {
             paddingTop: 10,
           }}
         >
-          <Colonybox
-            colony="SSE/W/S/LMG"
-            score="16"
-            navigation={navigation}
-            count="53"
-          />
-          <Colonybox
-            colony="SSE/W/N/LMG"
-            score="12"
-            navigation={navigation}
-            count="78"
-          />
+          {data &&
+            data.map((item) => {
+              return (
+                <Colonybox
+                  key={item.id}
+                  colony={item.name}
+                  score={item.pending}
+                  navigation={navigation}
+                  count={item.count}
+                  id={item.id}
+                />
+              );
+            })}
         </View>
       </View>
     </View>

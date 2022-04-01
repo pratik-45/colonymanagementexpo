@@ -11,6 +11,9 @@ import {
 } from "react-native";
 import Redbox from "../PoolHolder/Redbox";
 import DatePicker from "react-native-datepicker";
+import axios from "axios";
+import Baseurl from "../Baseurl";
+
 const ComplaintEachPool = ({ navigation, route }) => {
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, "0");
@@ -26,6 +29,34 @@ const ComplaintEachPool = ({ navigation, route }) => {
   past30 = yyyy1 + "-" + mm1 + "-" + dd1;
   const [startdate, setStartDate] = useState(past30);
   const [enddate, setEndDate] = useState(today);
+  const [data, setData] = useState();
+  const id = route.params.id;
+  const datas = route.params.data;
+  const token = route.params.token;
+  const authAxios = axios.create({
+    baseURL: Baseurl,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  useEffect(() => {
+    const fetchdata = async () => {
+      const res = await authAxios.get(
+        Baseurl +
+          "api/colony-vise-complaint-data/" +
+          id +
+          "/" +
+          startdate +
+          "/" +
+          enddate
+      );
+      setData(res.data);
+    };
+    fetchdata();
+  }, []);
+  console.log(data);
+
   const Division = route.params.name;
   const Colonybox = (props) => {
     const name = props.colony;
@@ -33,7 +64,12 @@ const ComplaintEachPool = ({ navigation, route }) => {
       <View>
         <TouchableOpacity
           onPress={() => {
-            props.navigation.navigate("ECSCW", { name: name });
+            props.navigation.navigate("ECSCW", {
+              name: name,
+              id: props.id,
+              data: datas,
+              token: token,
+            });
           }}
         >
           <View
@@ -243,42 +279,19 @@ const ComplaintEachPool = ({ navigation, route }) => {
             paddingTop: 10,
           }}
         >
-          <Colonybox
-            colony="RELIEF YARD"
-            score="1"
-            navigation={navigation}
-            count="12"
-          />
-          <Colonybox
-            colony="BRICF FIELD"
-            score="0"
-            navigation={navigation}
-            count="5"
-          />
-          <Colonybox
-            colony="NEW COLONY"
-            score="1"
-            navigation={navigation}
-            count="10"
-          />
-          <Colonybox
-            colony="SOUTH HILL"
-            score="2"
-            navigation={navigation}
-            count="8"
-          />
-          <Colonybox
-            colony="LOCO COLONY"
-            score="2"
-            navigation={navigation}
-            count="14"
-          />
-          <Colonybox
-            colony="RPSF COLONY"
-            score="1"
-            navigation={navigation}
-            count="6"
-          />
+          {data &&
+            data.map((item) => {
+              return (
+                <Colonybox
+                  key={item.id}
+                  colony={item.name}
+                  score={item.pending}
+                  navigation={navigation}
+                  count={item.count}
+                  id={item.id}
+                />
+              );
+            })}
         </View>
       </View>
     </View>

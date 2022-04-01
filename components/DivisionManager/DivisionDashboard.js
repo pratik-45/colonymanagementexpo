@@ -15,12 +15,20 @@ import DivisionScore from "./DivisionScore";
 import Baseurl from "../Baseurl";
 import axios from "axios";
 
-const DivisionDashboard = ({ navigation }) => {
+const DivisionDashboard = ({ navigation, route }) => {
   const [data, setData] = useState();
+  const token = route.params.token;
 
+  const datas = route.params.data;
+  const authAxios = axios.create({
+    baseURL: Baseurl,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   useEffect(() => {
     const fetchdata = async () => {
-      const res = await axios.get(Baseurl + "api/admin-dashboard/1");
+      const res = await authAxios.get(Baseurl + "api/admin-dashboard/1");
       setData(res.data[0]);
     };
     fetchdata();
@@ -60,6 +68,8 @@ const DivisionDashboard = ({ navigation }) => {
                   check="Score"
                   data1="Today"
                   data2="Overall"
+                  data={datas}
+                  token={token}
                 ></DivisionScore>
                 <DivisionScore
                   today={data.feedback.today + "%"}
@@ -70,6 +80,8 @@ const DivisionDashboard = ({ navigation }) => {
                   check="Feedback"
                   data1="Today"
                   data2="Overall"
+                  data={datas}
+                  token={token}
                 ></DivisionScore>
                 <DivisionScore
                   today={data.complaint.today}
@@ -80,6 +92,8 @@ const DivisionDashboard = ({ navigation }) => {
                   check="Complaint"
                   data1="Today"
                   data2="Overall"
+                  data={datas}
+                  token={token}
                 ></DivisionScore>
                 <DivisionScore
                   today={data.occupancy.occ}
@@ -90,6 +104,8 @@ const DivisionDashboard = ({ navigation }) => {
                   check="Occupancy"
                   data1="Occu."
                   data2="Total"
+                  data={datas}
+                  token={token}
                 ></DivisionScore>
                 <DivisionScore
                   today={data.request.today}
@@ -100,6 +116,8 @@ const DivisionDashboard = ({ navigation }) => {
                   check="Request"
                   data1="Today"
                   data2="Overall"
+                  data={datas}
+                  token={token}
                 ></DivisionScore>
               </View>
             )}
