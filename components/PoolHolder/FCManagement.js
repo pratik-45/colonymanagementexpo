@@ -10,40 +10,36 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import Redbox from "../PoolHolder/Redbox";
-import DivisionScore from "./DivisionScore";
-import Baseurl from "../Baseurl";
+import Redbox from "./Redbox";
+import Score from "./Score";
 import axios from "axios";
-
-const DivisionDashboard = ({ navigation, route }) => {
-  const [data, setData] = useState();
-  const [reload, setreload] = useState(false);
+import Baseurl from "../Baseurl";
+const FCManagement = ({ navigation, route }) => {
+  const id = route.params.id;
   const token = route.params.token;
-
-  const datas = route.params.data;
+  const data = route.params.data;
+  const [datas, setDatas] = useState();
   const authAxios = axios.create({
     baseURL: Baseurl,
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log(token);
-  console.log(datas);
+
   useEffect(() => {
     const fetchdata = async () => {
       try {
-        const res = await authAxios.get(
-          Baseurl + "api/admin-dashboard/" + datas.division_id
-        );
-
-        setData(res.data[0]);
+        const res = await authAxios.get(Baseurl + "api/pool-dashboard/" + id);
+        setDatas(res.data[0]);
       } catch (e) {
         console.log(e);
       }
     };
     fetchdata();
   }, []);
-  data !== undefined && console.log(data.service);
+
+  console.log(datas);
+
   return (
     <View>
       <ScrollView>
@@ -67,68 +63,78 @@ const DivisionDashboard = ({ navigation, route }) => {
               marginBottom: 30,
             }}
           >
-            {data && (
+            {datas && (
               <View>
-                <DivisionScore
-                  today={data.service.today + "%"}
-                  overall={data.service.overall + "%"}
-                  heading="Service Rating"
+                <Score
+                  today={datas.service.today}
+                  overall={datas.service.overall}
+                  heading="Service rating"
                   img={require("../../assets/score.png")}
                   navigation={navigation}
                   check="Score"
                   data1="Today"
                   data2="Overall"
-                  data={datas}
+                  id={id}
                   token={token}
-                ></DivisionScore>
-                <DivisionScore
-                  today={data.feedback.today}
-                  overall={data.feedback.overall}
+                  data={data}
+                  name={data.pool_name}
+                ></Score>
+                <Score
+                  today={datas.feedback.today}
+                  overall={datas.feedback.overall}
                   heading="Feedback"
                   img={require("../../assets/feedback.png")}
                   navigation={navigation}
                   check="Feedback"
                   data1="Today"
                   data2="Overall"
-                  data={datas}
+                  id={id}
                   token={token}
-                ></DivisionScore>
-                <DivisionScore
-                  today={data.complaint.today}
-                  overall={data.complaint.overall}
+                  data={data}
+                  name={data.pool_name}
+                ></Score>
+                <Score
+                  today={datas.complaint.today}
+                  overall={datas.complaint.overall}
                   heading="Complaint"
                   img={require("../../assets/complaint.png")}
                   navigation={navigation}
                   check="Complaint"
                   data1="Today"
                   data2="Overall"
-                  data={datas}
+                  id={id}
                   token={token}
-                ></DivisionScore>
-                <DivisionScore
-                  today={data.occupancy.occ}
-                  overall={data.occupancy.total}
+                  data={data}
+                  name={data.pool_name}
+                ></Score>
+                <Score
+                  today={datas.occupancy.occ}
+                  overall={datas.occupancy.total}
                   heading="Occupancy"
                   img={require("../../assets/Occupancy.png")}
                   navigation={navigation}
                   check="Occupancy"
                   data1="Occu."
                   data2="Total"
-                  data={datas}
+                  id={id}
                   token={token}
-                ></DivisionScore>
-                <DivisionScore
-                  today={data.request.today}
-                  overall={data.request.overall}
+                  data={data}
+                  name={data.pool_name}
+                ></Score>
+                <Score
+                  today={datas.request.today}
+                  overall={datas.request.overall}
                   heading="Request"
                   img={require("../../assets/request.png")}
                   navigation={navigation}
                   check="Request"
                   data1="Today"
                   data2="Overall"
-                  data={datas}
+                  id={id}
                   token={token}
-                ></DivisionScore>
+                  data={data}
+                  name={data.pool_name}
+                ></Score>
               </View>
             )}
           </View>
@@ -138,4 +144,4 @@ const DivisionDashboard = ({ navigation, route }) => {
   );
 };
 
-export default DivisionDashboard;
+export default FCManagement;

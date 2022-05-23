@@ -13,12 +13,10 @@ import Redbox from "../PoolHolder/Redbox";
 import Baseurl from "../Baseurl";
 import axios from "axios";
 
-const RequestEachPool = ({ navigation, route }) => {
-  const data = route.params.data;
+const OccupancyDivision = ({ navigation, route }) => {
+  const datas = route.params.data;
   const token = route.params.token;
-  const name = route.params.name;
-  const id = route.params.id;
-  const [reqData, setReqData] = useState();
+  const [data, setData] = useState();
   const authAxios = axios.create({
     baseURL: Baseurl,
     headers: {
@@ -29,25 +27,26 @@ const RequestEachPool = ({ navigation, route }) => {
   useEffect(() => {
     const fetchdata = async () => {
       const res = await authAxios.get(
-        Baseurl + "api/colony-vise-requests/" + id + "/"
+        Baseurl + "api/occupancy-sections/" + datas.division_id
       );
-      setReqData(res.data);
+      setData(res.data);
     };
     fetchdata();
   }, []);
 
-  console.log(reqData);
+  console.log(data);
+
   const Colonybox = (props) => {
     const name = props.colony;
     return (
       <View>
         <TouchableOpacity
           onPress={() => {
-            props.navigation.navigate("PoolRequest", {
+            props.navigation.navigate("OccupancyEachPool", {
               name: name,
-              data: data,
-              token: token,
               id: props.id,
+              token: token,
+              data: datas,
             });
           }}
         >
@@ -68,24 +67,31 @@ const RequestEachPool = ({ navigation, route }) => {
                 alignItems: "center",
                 justifyContent: "center",
                 position: "absolute",
-                left: 25,
+                width: 180,
+                left: 0,
               }}
             >
               <Text style={{ fontSize: 18, color: "white" }}>
                 {props.colony}
               </Text>
             </View>
-
             <View
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                left: 140,
+                left: 40,
               }}
             >
-              <Text style={{ fontSize: 18, color: "white" }}>
-                {props.count}
-              </Text>
+              <Text style={{ fontSize: 18, color: "white" }}>{props.occu}</Text>
+            </View>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                left: 120,
+              }}
+            >
+              <Text style={{ fontSize: 18, color: "white" }}>{props.vac}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -94,7 +100,7 @@ const RequestEachPool = ({ navigation, route }) => {
   };
   return (
     <View>
-      <Redbox content={name} content2="Request" />
+      <Redbox content="OCCUPIED" />
       <View>
         <View
           style={{
@@ -112,20 +118,28 @@ const RequestEachPool = ({ navigation, route }) => {
               alignItems: "center",
               justifyContent: "center",
               position: "absolute",
-              left: 20,
+              left: 35,
             }}
           >
-            <Text style={{ fontSize: 18, color: "white" }}>Colony Name</Text>
+            <Text style={{ fontSize: 18, color: "white" }}>Pool/Section</Text>
           </View>
-
           <View
             style={{
               alignItems: "center",
               justifyContent: "center",
-              left: 140,
+              left: 48,
             }}
           >
-            <Text style={{ fontSize: 18, color: "white" }}>Count</Text>
+            <Text style={{ fontSize: 18, color: "white" }}>Occu.</Text>
+          </View>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              left: 102,
+            }}
+          >
+            <Text style={{ fontSize: 18, color: "white" }}>Vac.</Text>
           </View>
         </View>
         <View
@@ -137,16 +151,19 @@ const RequestEachPool = ({ navigation, route }) => {
             paddingTop: 10,
           }}
         >
-          {reqData &&
-            reqData.map((item) => {
+          {data &&
+            data.map((item) => {
               return (
-                <Colonybox
-                  key={item.id}
-                  id={item.id}
-                  colony={item.name}
-                  count={item.count}
-                  navigation={navigation}
-                />
+                <>
+                  <Colonybox
+                    colony={item.name}
+                    score="90.33%"
+                    navigation={navigation}
+                    occu={item.occ}
+                    vac={item.vac}
+                    id={item.id}
+                  />
+                </>
               );
             })}
         </View>
@@ -155,4 +172,4 @@ const RequestEachPool = ({ navigation, route }) => {
   );
 };
 
-export default RequestEachPool;
+export default OccupancyDivision;

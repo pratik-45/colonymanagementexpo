@@ -1,12 +1,20 @@
 {
   "expo": {
-    "name": "colonymanagementexpo",
-    "slug": "colonymanagementexpo",
-    "version": "1.0.0",
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to use them as profile pictures, You can also capture images and create a complaint request."
+        }
+      ]
+    ],
+    "name": "Colony Management",
+    "slug": "ColonyManagement",
+    "version": "2.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/beatle_final_logo.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/beatle_splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -20,13 +28,17 @@
       "supportsTablet": true
     },
     "android": {
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.BeatleAnalytics.colonymanagement",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/beatle_final_logo.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.BeatleAnalytics.colonymanagement",
+      "versionCode": 12
     },
     "web": {
       "favicon": "./assets/favicon.png"
+      
     }
   }
 }

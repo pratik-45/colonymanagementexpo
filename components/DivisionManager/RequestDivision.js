@@ -13,11 +13,9 @@ import Redbox from "../PoolHolder/Redbox";
 import Baseurl from "../Baseurl";
 import axios from "axios";
 
-const RequestEachPool = ({ navigation, route }) => {
+const RequestDivision = ({ navigation, route }) => {
   const data = route.params.data;
   const token = route.params.token;
-  const name = route.params.name;
-  const id = route.params.id;
   const [reqData, setReqData] = useState();
   const authAxios = axios.create({
     baseURL: Baseurl,
@@ -27,15 +25,14 @@ const RequestEachPool = ({ navigation, route }) => {
   });
 
   useEffect(() => {
-    const fetchdata = async () => {
+    const fetchData = async () => {
       const res = await authAxios.get(
-        Baseurl + "api/colony-vise-requests/" + id + "/"
+        Baseurl + "api/section-vise-requests/" + data.division_id + "/"
       );
       setReqData(res.data);
     };
-    fetchdata();
+    fetchData();
   }, []);
-
   console.log(reqData);
   const Colonybox = (props) => {
     const name = props.colony;
@@ -43,7 +40,7 @@ const RequestEachPool = ({ navigation, route }) => {
       <View>
         <TouchableOpacity
           onPress={() => {
-            props.navigation.navigate("PoolRequest", {
+            props.navigation.navigate("RequestEachPool", {
               name: name,
               data: data,
               token: token,
@@ -68,7 +65,8 @@ const RequestEachPool = ({ navigation, route }) => {
                 alignItems: "center",
                 justifyContent: "center",
                 position: "absolute",
-                left: 25,
+                left: 0,
+                width: 180,
               }}
             >
               <Text style={{ fontSize: 18, color: "white" }}>
@@ -80,7 +78,7 @@ const RequestEachPool = ({ navigation, route }) => {
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                left: 140,
+                left: 120,
               }}
             >
               <Text style={{ fontSize: 18, color: "white" }}>
@@ -94,7 +92,7 @@ const RequestEachPool = ({ navigation, route }) => {
   };
   return (
     <View>
-      <Redbox content={name} content2="Request" />
+      <Redbox content="Request" />
       <View>
         <View
           style={{
@@ -112,17 +110,17 @@ const RequestEachPool = ({ navigation, route }) => {
               alignItems: "center",
               justifyContent: "center",
               position: "absolute",
-              left: 20,
+              left: 35,
             }}
           >
-            <Text style={{ fontSize: 18, color: "white" }}>Colony Name</Text>
+            <Text style={{ fontSize: 18, color: "white" }}>Pool/Section</Text>
           </View>
 
           <View
             style={{
               alignItems: "center",
               justifyContent: "center",
-              left: 140,
+              left: 118,
             }}
           >
             <Text style={{ fontSize: 18, color: "white" }}>Count</Text>
@@ -139,13 +137,14 @@ const RequestEachPool = ({ navigation, route }) => {
         >
           {reqData &&
             reqData.map((item) => {
+              console.log(item.name);
               return (
                 <Colonybox
                   key={item.id}
-                  id={item.id}
                   colony={item.name}
-                  count={item.count}
                   navigation={navigation}
+                  count={item.count}
+                  id={item.id}
                 />
               );
             })}
@@ -155,4 +154,4 @@ const RequestEachPool = ({ navigation, route }) => {
   );
 };
 
-export default RequestEachPool;
+export default RequestDivision;

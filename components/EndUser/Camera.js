@@ -11,16 +11,48 @@ import {
   ScrollView,
 } from "react-native";
 import { Camera } from "expo-camera";
-import { NavigationContainer } from "@react-navigation/native";
 
-export default function App({ navigation }) {
+export default function App({ navigation, route }) {
+  const data = route.params.data;
+  const token = route.params.token;
+  const username = route.params.username;
+  const [imageData, setImageData] = useState();
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
-
+  const [filename, setFileName] = useState();
   const [modalVisible, setModalVisible] = useState(false);
+  const Type = "image/jpeg";
+
+  const SaveData = () => {
+    const temp = imageData.uri.split("/");
+    setFileName(temp[temp.length - 1]);
+    console.log(filename);
+
+    filename &&
+      navigation.navigate("Complaint", {
+        data: data,
+        token: token,
+        username: username,
+        uri: imageData.uri,
+        type: Type,
+        name: filename,
+      });
+
+    // let res = await fetch(
+    //     'http://localhost//webservice/user/uploadImage',
+    //     {
+    //       method: 'post',
+    //       body: formData,
+    //       headers: {
+    //         'Content-Type': 'multipart/form-data; ',
+    //       },
+    //     }
+    //   );
+  };
+
   // const Camera = useRef().current;
   const Modals = (props) => {
     return (
@@ -114,7 +146,14 @@ export default function App({ navigation }) {
                       onPress={() => {
                         setCapturedImage(null);
                         setModalVisible(false);
-                        props.navigation.navigate("Complaint");
+                        props.navigation.navigate("Complaint", {
+                          data: data,
+                          token: token,
+                          username: username,
+                          uri: null,
+                          type: null,
+                          name: null,
+                        });
                       }}
                     >
                       <View
@@ -139,7 +178,9 @@ export default function App({ navigation }) {
                   >
                     <TouchableOpacity
                       style={styles.roundbutton}
-                      onPress={() => {}}
+                      onPress={() => {
+                        SaveData();
+                      }}
                     >
                       <View
                         style={{
@@ -176,13 +217,15 @@ export default function App({ navigation }) {
   }
   const takePicture = async () => {
     if (!Camera) return;
-    const options = { quality: 0.5 };
+    const options = { quality: 0.5, mediaType: "photo" };
     const photo = await cameraRef.takePictureAsync(options);
     setCapturedImage(photo.uri);
+    setImageData(photo);
     setModalVisible(true);
     // console.log(photo);
     setPreviewVisible(true);
   };
+  console.log(imageData);
   return (
     <View style={styles.container}>
       <Camera

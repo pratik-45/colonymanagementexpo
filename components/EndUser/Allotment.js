@@ -12,7 +12,11 @@ import {
 } from "react-native";
 import Infobox from "./Infobox";
 
-const Allotment = ({ navigation }) => {
+const Allotment = ({ navigation, route }) => {
+  const data = route.params.data;
+  const token = route.params.token;
+  const username = route.params.username;
+  console.log(token);
   const Selectrequest = (props) => {
     return (
       <View
@@ -30,9 +34,17 @@ const Allotment = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => {
               if (props.name == "New Allotment") {
-                props.navigation.navigate("NewAllotment");
+                props.navigation.navigate("NewAllotment", {
+                  token: token,
+                  data: data,
+                  username: username,
+                });
               } else {
-                props.navigation.navigate("Vacant");
+                props.navigation.navigate("Vacant", {
+                  token: token,
+                  data: data,
+                  username: username,
+                });
               }
             }}
           >

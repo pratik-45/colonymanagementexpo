@@ -15,7 +15,11 @@ import axios from "axios";
 import Baseurl from "../Baseurl";
 const Complaint = ({ navigation, route }) => {
   const token = route.params.token;
+  const uri = route.params.uri;
+  const name = route.params.name;
+  const type = route.params.type;
   const username = route.params.username;
+  const datas = route.params.data;
   const [data, setData] = useState();
   const [showcat, setShowCat] = useState(false);
   const [selectedCat, setSelectedCat] = useState(false);
@@ -34,20 +38,38 @@ const Complaint = ({ navigation, route }) => {
   var subcate = [];
   var cateid = [];
   var subcateid = [];
-
+  var value;
+  // console.log(uri);
+  // console.log(name);
+  // console.log(type);
+  console.log(datas);
+  var formData = new FormData();
+  formData.append("photo", {
+    uri: uri,
+    name: name,
+    type: type,
+  });
+  formData.append("user", username);
+  formData.append("type", cid);
+  formData.append("subtype", scid);
+  formData.append("remark", remark);
+  console.log(formData);
   const authAxios = axios.create({
     baseURL: Baseurl,
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
     },
   });
 
   useEffect(() => {
     const fetchdata = async () => {
       try {
-        const response = await authAxios.get(Baseurl + "api/complaint-types/");
+        const response = await authAxios.get(
+          Baseurl + "api/complaint-types/" + datas.division_id
+        );
 
-        console.log(response);
+        // console.log(response.data);
         setData(response.data);
       } catch (e) {
         console.log(e);
@@ -57,17 +79,18 @@ const Complaint = ({ navigation, route }) => {
 
     // data !== undefined &&
   }, []);
-  console.log(data);
+  // console.log(data);
 
   const showtype = () => {
-    data.map((item, index) => {
-      // setCat([...cat, item.title]);
-      cate.push(item.title);
-      cateid.push(item.id);
-      setCat(cate);
-      setCatid(cateid);
-    });
-    console.log(cat);
+    data &&
+      data.map((item, index) => {
+        // setCat([...cat, item.title]);
+        cate.push(item.title);
+        cateid.push(item.id);
+        setCat(cate);
+        setCatid(cateid);
+      });
+    // console.log(cat);
   };
 
   const showsubtype = (category) => {
@@ -85,25 +108,41 @@ const Complaint = ({ navigation, route }) => {
       });
   };
 
+  // , {
+  //       user: username,
+  //       type: cid,
+  //       subtype: scid,
+  //       remark: remark,
+  //     }
+
   const handleSubmit = async () => {
     try {
-      const response = await authAxios.post("api/create-complaint/", {
-        user: username,
-        type: cid,
-        subtype: scid,
-        remark: remark,
-      });
+      const response = await authAxios.post(
+        Baseurl + "api/create-complaint/",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       console.log(response.data);
       // setCheckdata(true);
       // console.log(data);
     } catch (e) {
       console.log(e);
     }
-    navigation.navigate("Thankyou", { where: "Complaint" });
+    navigation.navigate("Thankyou", {
+      where: "Complaint",
+      token: token,
+      username: username,
+      data: datas,
+    });
   };
 
-  console.log(cid);
-  console.log(scid);
+  // console.log(cid);
+  // console.log(scid);
   return (
     <View style={{ flex: 1 }}>
       <ScrollView>
@@ -240,7 +279,7 @@ const Complaint = ({ navigation, route }) => {
                 {subcat &&
                   subcat.map((item, index) => {
                     return (
-                      <View>
+                      <View key={index}>
                         <TouchableOpacity
                           onPress={() => {
                             setSelectedSubCat(true);
@@ -323,7 +362,13 @@ const Complaint = ({ navigation, route }) => {
             >
               <TouchableOpacity
                 style={styles.roundbutton2}
-                onPress={() => navigation.navigate("Camera")}
+                onPress={() =>
+                  navigation.navigate("Camera", {
+                    data: datas,
+                    token: token,
+                    username: username,
+                  })
+                }
               >
                 <View
                   style={{

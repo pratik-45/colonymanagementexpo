@@ -21,6 +21,7 @@ const Feedback = ({ navigation, route }) => {
   var params = [];
   const token = route.params.token;
   const username = route.params.username;
+  const datas = route.params.data;
   const authAxios = axios.create({
     baseURL: Baseurl,
     headers: {
@@ -47,12 +48,19 @@ const Feedback = ({ navigation, route }) => {
   };
 
   const navigates = () => {
-    navigation.navigate("Thankyou", { where: "Feedback" });
+    navigation.navigate("Thankyou", {
+      where: "Feedback",
+      token: token,
+      username: username,
+      data: datas,
+    });
   };
   useEffect(() => {
     const fetchdata = async () => {
       try {
-        const response = await authAxios.get("api/feedback-parameters/");
+        const response = await authAxios.get(
+          "api/feedback-parameters/" + datas.division_id
+        );
         setdata(response.data);
         setCheckdata(true);
         // console.log(data);
