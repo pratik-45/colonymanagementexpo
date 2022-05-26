@@ -29,6 +29,7 @@ const Loginpage = ({ navigation, route }) => {
 
   const fetchtoken = async () => {
     try {
+      console.log("hello");
       const res = await axios.post(Baseurl + "api/token/", {
         username: loginid,
         password: pass,
@@ -41,7 +42,7 @@ const Loginpage = ({ navigation, route }) => {
       //   setErr(true);
       // }
     } catch (e) {
-      //
+      console.log(e);
       try {
         e !== undefined && e.response.status === "401" && setErr(true);
       } catch (e) {
@@ -78,6 +79,10 @@ const Loginpage = ({ navigation, route }) => {
         navig();
       }, 500);
     }
+    return () => {
+      setloginid("");
+      setPass("");
+    };
   }, [data, reload]);
 
   // const changeSession = () => {

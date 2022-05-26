@@ -13,6 +13,7 @@ import Footer from "./Footer";
 import Infobox from "./Infobox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as StoreReview from "expo-store-review";
+import * as Linking from "expo-linking";
 
 const Choice = ({ navigation, route }) => {
   const data = route.params.data;
@@ -22,6 +23,13 @@ const Choice = ({ navigation, route }) => {
   const androidPackageName = "com.BeatleAnalytics.colonymanagement";
   // StoreReview.requestReview();
   const rateus = async () => {
+    Linking.openURL(
+      `https://play.google.com/store/apps/details?id=${androidPackageName}&showAllReviews=true`
+    );
+    // // Open the Android Play Store directly
+    // Linking.openURL(
+    //   `market://details?id=${androidPackageName}&showAllReviews=true`
+    // );
     if (await StoreReview.isAvailableAsync()) {
       console.log("hello");
       StoreReview.requestReview();
@@ -31,12 +39,8 @@ const Choice = ({ navigation, route }) => {
     const removeData = async () => {
       try {
         await AsyncStorage.removeItem("username");
-      } catch (e) {
-        // saving error
-        console.log(e);
-      }
-      try {
         await AsyncStorage.removeItem("pass");
+        navigation.navigate("Loginpage");
       } catch (e) {
         // saving error
         console.log(e);
@@ -46,7 +50,6 @@ const Choice = ({ navigation, route }) => {
     console.log("deleated");
 
     removeData();
-    navigation.navigate("Loginpage");
   };
   const Choicebox = (props) => {
     return (
@@ -138,7 +141,7 @@ const Choice = ({ navigation, route }) => {
           }}
         >
           <View style={{ marginTop: 20 }}></View>
-          <Button onPress={rateus} title="rateus"></Button>
+          {/* <Button onPress={rateus} title="rateus"></Button> */}
           <Choicebox name="Feedback" navigation={navigation} />
           <Choicebox name="Complaint" navigation={navigation} />
           <Choicebox name="Allotment Request" navigation={navigation} />

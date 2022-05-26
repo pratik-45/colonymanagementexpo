@@ -30,12 +30,8 @@ const PoolLanding = ({ navigation, route }) => {
     const removeData = async () => {
       try {
         await AsyncStorage.removeItem("username");
-      } catch (e) {
-        // saving error
-        console.log(e);
-      }
-      try {
         await AsyncStorage.removeItem("pass");
+        navigation.navigate("Loginpage");
       } catch (e) {
         // saving error
         console.log(e);
@@ -44,7 +40,6 @@ const PoolLanding = ({ navigation, route }) => {
     console.log("deleated");
 
     removeData();
-    navigation.navigate("Loginpage");
   };
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library

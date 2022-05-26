@@ -22,12 +22,8 @@ const Landing = ({ navigation, route }) => {
     const removeData = async () => {
       try {
         await AsyncStorage.removeItem("username");
-      } catch (e) {
-        // saving error
-        console.log(e);
-      }
-      try {
         await AsyncStorage.removeItem("pass");
+        navigation.navigate("Loginpage");
       } catch (e) {
         // saving error
         console.log(e);
@@ -36,7 +32,6 @@ const Landing = ({ navigation, route }) => {
     console.log("deleated");
 
     removeData();
-    navigation.navigate("Loginpage");
   };
   // console.log(data);
   const pickImage = async () => {
